@@ -293,7 +293,7 @@ static void maybe_send_surface_position(struct uat_adsb_mdb *mdb)
     if (mdb->airground_state != AG_GROUND)
         return; // nope!
 
-    setbits(esnt_frame, 1, 5, 18);                 // DF=18, ES/NT
+    setbits(esnt_frame, 1, 5, 17);                 // DF=18, ES/NT
     setbits(esnt_frame, 6, 8, encode_cf(mdb));     // CF
     setbits(esnt_frame, 9, 32, mdb->address);      // AA
 
@@ -341,7 +341,7 @@ static void maybe_send_air_position(struct uat_adsb_mdb *mdb)
         return;
     }        
 
-    setbits(esnt_frame, 1, 5, 18);            // DF=18, ES/NT
+    setbits(esnt_frame, 1, 5, 17);            // DF=18, ES/NT
     setbits(esnt_frame, 6, 8, encode_cf(mdb));// CF
     setbits(esnt_frame, 9, 32, mdb->address); // AA
 
@@ -394,7 +394,7 @@ static void maybe_send_air_velocity(struct uat_adsb_mdb *mdb)
         return;
     }
 
-    setbits(esnt_frame, 1, 5, 18);            // DF=18, ES/NT
+    setbits(esnt_frame, 1, 5, 17);            // DF=18, ES/NT
     setbits(esnt_frame, 6, 8, encode_cf(mdb));// CF
     setbits(esnt_frame, 9, 32, mdb->address); // AA
 
@@ -525,7 +525,7 @@ static void maybe_send_callsign(struct uat_adsb_mdb *mdb)
             return;
         }
 
-        setbits(esnt_frame, 1, 5, 18);            // DF=18, ES/NT
+        setbits(esnt_frame, 1, 5, 17);            // DF=18, ES/NT
         setbits(esnt_frame, 6, 8, encode_cf(mdb));// CF
         setbits(esnt_frame, 9, 32, mdb->address); // AA
 
@@ -560,7 +560,7 @@ static void maybe_send_callsign(struct uat_adsb_mdb *mdb)
         break;
 
     case CS_SQUAWK:
-        setbits(esnt_frame, 1, 5, 18);            // DF=18, ES/NT
+        setbits(esnt_frame, 1, 5, 17);            // DF=18, ES/NT
         setbits(esnt_frame, 6, 8, encode_cf(mdb));// CF
         setbits(esnt_frame, 9, 32, mdb->address); // AA
 
