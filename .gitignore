@@ -5,3 +5,5 @@ extract_nexrad
 uat2esnt
 uat2json
 uat2text
+*.exe
+DEADJOE
