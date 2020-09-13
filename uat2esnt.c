@@ -502,7 +502,7 @@ static unsigned encodeSquawk(char *squawkStr)
     return encoded;
 }
 
-static int mapSquawkToEmergency(const char *squawkStr)
+/*static int mapSquawkToEmergency(const char *squawkStr)
 {
     if (!strcmp(squawkStr, "7500"))
         return 5; // Unlawful Interference
@@ -511,7 +511,7 @@ static int mapSquawkToEmergency(const char *squawkStr)
     if (!strcmp(squawkStr, "7700"))
         return 1; // General Emergency
     return 0; // No Emergency
-}
+}*/
 
 static void maybe_send_callsign(struct uat_adsb_mdb *mdb)
 {
@@ -560,17 +560,25 @@ static void maybe_send_callsign(struct uat_adsb_mdb *mdb)
         break;
 
     case CS_SQUAWK:
-        setbits(esnt_frame, 1, 5, 17);            // DF=18, ES/NT
-        setbits(esnt_frame, 6, 8, encode_cf(mdb));// CF
-        setbits(esnt_frame, 9, 32, mdb->address); // AA
-
-        setbits(esnt_frame+4, 1, 5, 28);                           // FORMAT TYPE CODE = 28, Aircraft Status Message
-        setbits(esnt_frame+4, 6, 8, 1);                            // subtype = 1, emergency/priority status
-        setbits(esnt_frame+4, 9, 11, mapSquawkToEmergency(mdb->callsign));
-        setbits(esnt_frame+4, 12, 24, encodeSquawk(mdb->callsign));
-        // 25..55 reserved
-        setbits(esnt_frame+4, 56, 56, imf);
-        checksum_and_send(esnt_frame, 14, 0);
+        if(!imf) {
+            int flight_status = 0;
+            if (mdb->airground_state == AG_GROUND) {
+                flight_status = 1;
+            }
+            setbits(esnt_frame, 1, 5, 5);            // DF=5, ES/NT
+            setbits(esnt_frame, 6, 8, flight_status);// Flight Status
+            setbits(esnt_frame, 9, 13, 0); // Downlink Request
+            setbits(esnt_frame, 14, 19, 0);  //Utility Message
+            setbits(esnt_frame, 20, 32, encodeSquawk(mdb->callsign));
+            
+            //setbits(esnt_frame+4, 1, 5, 28);                           // FORMAT TYPE CODE = 28, Aircraft Status Message
+            //setbits(esnt_frame+4, 6, 8, 1);                            // subtype = 1, emergency/priority status
+            //setbits(esnt_frame+4, 9, 11, mapSquawkToEmergency(mdb->callsign));
+            //setbits(esnt_frame+4, 12, 24, encodeSquawk(mdb->callsign));
+            // 25..55 reserved
+            //setbits(esnt_frame+4, 56, 56, imf);
+            checksum_and_send(esnt_frame, 7, mdb->address);
+        }
         break;
 
     default:
