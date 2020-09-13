@@ -269,7 +269,7 @@ static void send_altitude_only(struct uat_adsb_mdb *mdb)
         raw_alt = 0;
     }
 
-    setbits(esnt_frame, 1, 5, 18);                 // DF=18, ES/NT
+    setbits(esnt_frame, 1, 5, 17);                 // DF=18, ES/NT
     setbits(esnt_frame, 6, 8, encode_cf(mdb));     // CF
     setbits(esnt_frame, 9, 32, mdb->address);      // AA
 
